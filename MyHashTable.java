@@ -1,10 +1,10 @@
-//essentially an array of linked list of WordEntry
+//essentially an array of linked list of HashNode
 public class MyHashTable
 {
     private long keys;
     private int SIZE;
 
-    private MyLinkedList<WordEntry>[] hashArray;
+    private MyLinkedList<HashNode>[] hashArray;
 
     @SuppressWarnings("unchecked")
     public MyHashTable()
@@ -32,11 +32,14 @@ public class MyHashTable
         int index = getHashIndex(w.identifier());
         //System.out.println("Index - "+index+" Word - "+w);
         //new word insert
+        HashNode word = new HashNode(w.identifier());
+        word.addPositions(w.getAllPositionsForThisWord());
+
         if (hashArray[index] == null)
         {
             //System.out.println("new");
-            hashArray[index] = new MyLinkedList<WordEntry>();
-            hashArray[index].add(w);
+            hashArray[index] = new MyLinkedList<HashNode>();
+            hashArray[index].add(word);
             keys++;
         }
         //already a value present
@@ -46,7 +49,7 @@ public class MyHashTable
             {
                 //System.out.println("merge - "+w);
                 //merging case
-                WordEntry node = hashArray[index].search(w).data;
+                HashNode node = hashArray[index].search(w).data;
                 //System.out.println(node);
                 node.addPositions(w.getAllPositionsForThisWord());
             }
@@ -56,13 +59,13 @@ public class MyHashTable
                 //System.out.println("collison");
                 //System.out.println(hashArray[index].head().data+" - "+w+" - "+index);
                 //collison case - handled by chaining
-                hashArray[index].add(w);
+                hashArray[index].add(word);
                 keys++;
             }
         }
     }
 
-    public WordEntry getPositionForWord(String word)
+    public HashNode getPositionForWord(String word)
     {
         int index = getHashIndex(word);
         //System.out.println("Get - index - "+index);
@@ -70,7 +73,7 @@ public class MyHashTable
         {
             try
             {
-                WordEntry node = hashArray[index].search(new WordEntry(word)).data;
+                HashNode node = hashArray[index].search(new HashNode(word)).data;
                 return node;
             }
             catch(NullPointerException e)

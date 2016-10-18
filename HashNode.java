@@ -1,12 +1,12 @@
-public class WordEntry
+public class HashNode
 {
     private String word;
-    private AVL<Position> position;
+    private MyLinkedList<Position> position;
 
-    public WordEntry(String word)
+    public HashNode(String word)
     {
         this.word = word;
-        this.position = new AVL<Position>();
+        this.position = new MyLinkedList<Position>();
     }
 
     public void addPosition(Position position)
@@ -15,24 +15,26 @@ public class WordEntry
         this.position.add(position);
     }
 
+    public void addPositions(MyLinkedList<Position> positions)
+    {
+        this.position.add(positions);
+    }
+
     public MyLinkedList<Position> getAllPositionsForThisWord()
     {
-        return position.elements();
+        return position;
     }
 
     public String identifier()
     {
         return word;
     }
-    public AVL<Position> getPositions()
-    {
-        return position;
-    }
+
     //defining equality when identifiers are equal irrespective of position list
     @Override
     public boolean equals(Object obj)
     {
-        return this.word.equals(((WordEntry)obj).identifier());
+        return this.word.equals(((HashNode)obj).identifier());
     }
 
     public String toString()

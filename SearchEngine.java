@@ -1,11 +1,11 @@
 import java.util.Scanner;
 import java.io.*;
-public class SearchEngine{
-
+public class SearchEngine
+{
     private InvertedPageIndex wordSet;
     private MySet<PageEntry> pageSet;
     private MySet<String> connectorWords;
-	public SearchEngine() 
+	public SearchEngine()
     {
         wordSet = new InvertedPageIndex();
         connectorWords = new MySet<String>();
@@ -53,6 +53,7 @@ public class SearchEngine{
         {
             br = new BufferedReader( new FileReader("./webpages/"+fileName));
             int counter = 1;
+            int fakeCounter = 1;
             while((input = br.readLine())!=null)
             {
                 input = input.toLowerCase();
@@ -76,7 +77,8 @@ public class SearchEngine{
                         }
                         if(!connectorWords.isMember(words[i]))
                         {
-                            index.addPositionForWord(words[i], new Position(page,counter));
+                            index.addPositionForWord(words[i], new Position(page,counter,fakeCounter));
+                            fakeCounter++;
                         }
                         counter++;
                     }
@@ -104,7 +106,22 @@ public class SearchEngine{
 
         return page;
     }
-	public void performAction(String actionMessage) {
+
+    private MySet<SearchResult> getSortedPages(MySet<PageEntry> pages, String[] strings, boolean isPhrase)
+    {
+        MyLinkedList<PageEntry> pageList = pages.getSet();
+        MyLinkedList<PageEntry>.Node itr = pageList.head();
+        MySet<SearchResult> results;
+        while(itr != null)
+        {
+            float rel = itr.data.getRelevanceOfPage(strings,isPhrase);
+            results.add(new SearchResult(itr.data,relevance));
+        }
+        return MySort.sortThisList(results);
+    }
+
+	public void performAction(String actionMessage)
+    {
         Scanner input = new Scanner(actionMessage);
         //System.out.println("pageSet - "+pageSet.size());
         try
@@ -132,10 +149,79 @@ public class SearchEngine{
                     }
                     else
                     {
+                        String[] str = new String[1];
+                        str[0] = word;
                         System.out.print("\""+word+"\" is present in pages - \"");
-                        System.out.println(containingPages + "\"");
+                        System.out.println(getSortedPages(containingPages,str,false) + "\"");
                     }
                     break;
+
+                case "queryFindPagesWhichContainAllWords":
+                    ArrayList<String> words = new ArrayList<String>();
+                    while(input.hasNext())
+                    {
+                        words.add(parseWord(input.next());
+                    }
+                    String[] strings = new String[words.size()];
+                    for(int i=0;i<strings.length;i++)
+                    {
+                        strings[i] = words.get(i);
+                    }
+
+                    MySet<PageEntry> pages = wordSet.getPagesWhichContainAllWord(strings)
+                    if(pages == null)
+                    {
+                        System.out.println("No Such Pages");
+                    }
+                    else
+                    {
+                        System.out.println(getSortedPages(pages,strings,false));
+                    }
+
+                case "queryFindPagesWhichContainAnyOfTheseWords":
+                    ArrayList<String> words = new ArrayList<String>();
+                    while(input.hasNext())
+                    {
+                        words.add(parseWord(input.next());
+                    }
+                    String[] strings = new String[words.size()];
+                    for(int i=0;i<strings.length;i++)
+                    {
+                        strings[i] = words.get(i);
+                    }
+
+                    MySet<PageEntry> pages = wordSet.getPagesWhichContainAnyWord(strings)
+                    if(pages == null)
+                    {
+                        System.out.println("No Such Pages");
+                    }
+                    else
+                    {
+                        System.out.println(getSortedPages(pages,strings,false));
+                    }
+
+                case "queryFindPagesWhichContainPhrase":
+                    ArrayList<String> words = new ArrayList<String>();
+                    while(input.hasNext())
+                    {
+                        words.add(parseWord(input.next());
+                    }
+                    String[] strings = new String[words.size()];
+                    for(int i=0;i<strings.length;i++)
+                    {
+                        strings[i] = words.get(i);
+                    }
+
+                    MySet<PageEntry> pages = wordSet.getPagesWhichContainPhrase(strings)
+                    if(pages == null)
+                    {
+                        System.out.println("No Such Pages");
+                    }
+                    else
+                    {
+                        System.out.println(getSortedPages(pages,strings,true));
+                    }
+
                 case "queryFindPositionsOfWordInAPage":
                     word = parseWord(input.next());
                     pageName = parseWord(input.next());
@@ -175,6 +261,8 @@ public class SearchEngine{
                         System.out.println("Webpage "+pageName+" does not contain word "+word);
                     }
                     break;
+
+
             }
         }
         catch(Exception e)

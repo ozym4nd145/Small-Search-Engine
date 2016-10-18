@@ -7,6 +7,11 @@ public class MySet<T>
         objectSet = new MyLinkedList<T>();
     }
 
+    public MyLinkedList<T> getSet()
+    {
+        return objectSet;
+    }
+
     public T search(T o)
     {
         MyLinkedList<T>.Node obj = objectSet.search(o);
