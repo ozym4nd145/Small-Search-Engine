@@ -108,7 +108,10 @@ public class MySet<T>
         {
             try
             {
-                interSet.insert(itr.data);
+                if(a.isMember(itr.data))
+                {
+                    interSet.insert(itr.data);
+                }
             }
             catch(AlreadyPresent e)
             {

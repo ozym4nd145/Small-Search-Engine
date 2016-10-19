@@ -17,7 +17,11 @@ public class SearchResult implements Comparable<SearchResult>
     }
     public int compareTo(SearchResult obj)
     {
-        return relevance - obj.getRelevance();
+        if(relevance == obj.getRelevance())
+        {
+            return 0;
+        }
+        return (relevance > obj.getRelevance())?(1):(-1);
     }
     public String toString()
     {

@@ -1,4 +1,4 @@
-public class Position extends Comparable<Position>
+public class Position implements Comparable<Position>
 {
     private PageEntry page;
     private int wordIndex;
@@ -8,6 +8,7 @@ public class Position extends Comparable<Position>
     {
         page = p;
         this.wordIndex = wordIndex;
+        this.fakeIndex = fakeIndex;
     }
 
     public PageEntry getPageEntry()

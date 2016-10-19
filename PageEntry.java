@@ -1,3 +1,4 @@
+import java.util.*;
 public class PageEntry
 {
     private String name;
@@ -38,18 +39,22 @@ public class PageEntry
     {
         if(repPhrase)
         {
+            // System.out.println("PHRASE");
             int[] positions = occurPhrase(str);
             float relevance = 0;
             for (int i=0;i<positions.length;i++)
             {
+                // System.out.println(positions[i]);
                 relevance += (1.0)/(positions[i]*positions[i]);
             }
             return relevance;
         }
         else
         {
-            float relevance = 0.0;
-            int numWords = str.length();
+            // System.out.println("ADD?OR");
+            MyLinkedList<WordEntry> words = pageIndex.getWordEntries();
+            float relevance = 0;
+            int numWords = str.length;
             for(int i=0;i<numWords;i++)
             {
                 try
@@ -58,13 +63,14 @@ public class PageEntry
 
                     while(itr != null)
                     {
+                        // System.out.println(itr.data);
                         relevance += (1.0)/(itr.data.getWordIndex()*itr.data.getWordIndex());
                         itr = itr.next;
                     }
                 }
                 catch(NullPointerException e)
                 {
-                    System.out.println("Check one time");
+                    // System.out.println("Check one time");
                 }
             }
             return relevance;
@@ -73,24 +79,30 @@ public class PageEntry
     public int[] occurPhrase(String phrase[])
     {
         ArrayList<Integer> pos = new ArrayList<Integer>();
-        int numWords = phrase.length();
+        int numWords = phrase.length;
         MyLinkedList<WordEntry> words = pageIndex.getWordEntries();
-
-        AVL<Position>[] phraseWords = new AVL<Position>[numWords-1];
+        // System.out.println(words);
+        AVL<Position>[] phraseWords = new AVL[numWords-1];
+        // System.out.println(numWords);
+        // System.out.println(phraseWords.length);
         MyLinkedList<Position> firstWordPos = words.search(new WordEntry(phrase[0])).data.getAllPositionsForThisWord();
+        // System.out.println(firstWordPos);
         MyLinkedList<Position>.Node iter = firstWordPos.head();
+        // System.out.println(iter.data);
         for(int i=1;i<numWords;i++)
         {
-            phraseWords[i] = words.search(new WordEntry(phrase[i])).data.getPositions();
+            // System.out.println("&&");
+            phraseWords[i-1] = words.search(new WordEntry(phrase[i])).data.getPositions();
         }
         while(iter != null)
         {
+            // System.out.println(iter.data);
             int current_pos = iter.data.getFakeIndex();
             boolean isPhrase = true;
             for(int i=1;i<numWords;i++)
             {
                 Position newPos = new Position(null,-4,current_pos+i);
-                if(phraseWords[i].search(newPos) == null)
+                if(phraseWords[i-1].search(newPos) == null)
                 {
                     isPhrase = false;
                     break;
@@ -98,7 +110,7 @@ public class PageEntry
             }
             if(isPhrase)
             {
-                pos.add(current_pos);
+                pos.add(iter.data.getWordIndex());
             }
             iter = iter.next;
         }

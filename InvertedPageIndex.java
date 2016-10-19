@@ -57,7 +57,7 @@ public class InvertedPageIndex
             MySet<PageEntry> possiblePages = getPagesWhichContainWord(str[0]);
             for (int i=1;i<str.length;i++)
             {
-                possiblePages = possiblePages.union(getPagesWhichContainWord(str[i]));
+                possiblePages = possiblePages.intersection(getPagesWhichContainWord(str[i]));
                 if(possiblePages.size() == 0)
                 {
                     break;
@@ -78,7 +78,7 @@ public class InvertedPageIndex
             MySet<PageEntry> possiblePages = getPagesWhichContainWord(str[0]);
             for (int i=1;i<str.length;i++)
             {
-                possiblePages = possiblePages.intersection(getPagesWhichContainWord(str[i]));
+                possiblePages = possiblePages.union(getPagesWhichContainWord(str[i]));
                 if(possiblePages.size() == 0)
                 {
                     break;
@@ -101,12 +101,21 @@ public class InvertedPageIndex
             MyLinkedList<PageEntry> pages = possiblePages.getSet();
             MyLinkedList<PageEntry>.Node itr = pages.head();
             MySet<PageEntry> validPages = new MySet<PageEntry>();
-            for(itr != null)
+            while(itr != null)
             {
+                // System.out.println("haha");
                 if(itr.data.occurPhrase(str) != null)
                 {
-                    validPages.insert(itr.data);
+                    try
+                    {
+                        validPages.insert(itr.data);
+                    }
+                    catch(AlreadyPresent e)
+                    {
+
+                    }
                 }
+                // System.out.println("kakak");
                 itr = itr.next;
             }
             if(validPages.size() > 0)

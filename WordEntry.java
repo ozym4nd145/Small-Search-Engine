@@ -13,6 +13,7 @@ public class WordEntry
     {
         //check for redundancy?
         this.position.add(position);
+        //System.out.println(this.position.elements());
     }
 
     public MyLinkedList<Position> getAllPositionsForThisWord()

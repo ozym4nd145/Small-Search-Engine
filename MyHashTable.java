@@ -49,7 +49,7 @@ public class MyHashTable
             {
                 //System.out.println("merge - "+w);
                 //merging case
-                HashNode node = hashArray[index].search(w).data;
+                HashNode node = hashArray[index].search(new HashNode(w.identifier())).data;
                 //System.out.println(node);
                 node.addPositions(w.getAllPositionsForThisWord());
             }

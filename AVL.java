@@ -72,7 +72,7 @@ public class AVL<T extends Comparable<T> >
     public void rotate(Node parent, Node child)
     {
         // System.out.println(parent);
-        // System.out.println(parent.leftChild);
+    // System.out.println(parent.leftChild);
         // System.out.println(parent.rightChild);
         // System.out.println(child.leftChild);
         // System.out.println(child.rightChild);
