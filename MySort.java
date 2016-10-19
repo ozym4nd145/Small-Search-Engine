@@ -24,37 +24,37 @@ public class MySort
         {
             return;
         }
-        T pivot = array.get(first);
+        T pivot = array.get((first+last)/2);
         int less=first;int greater = last;
         T temp;
-        while(less < greater)
+        while(less <= greater)
         {
-            while(less <= last && comparator.compare(array.get(less),pivot)<=0)
+            while(comparator.compare(array.get(less),pivot)<0)
             {
                 less++;
             }
-            while(greater >= first && comparator.compare(array.get(greater),pivot)>0)
+            while(comparator.compare(array.get(greater),pivot)>0)
             {
                 greater--;
             }
-            if(less<greater)
+            if(less<=greater)
             {
                 temp = array.get(less);
                 array.set(less,array.get(greater));
                 array.set(greater,temp);
+                less++;
+                greater--;
             }
         }
-        temp = array.get(first);
-        array.set(first,array.get(greater));
-        array.set(greater,temp);
-        quickSort(array,first,greater-1,comparator);
-        quickSort(array,greater+1,last,comparator);
+        quickSort(array,first,greater,comparator);
+        quickSort(array,less,last,comparator);
     }
 
     public static void main(String[] args)
     {
         ArrayList<Integer> array = new ArrayList<Integer>();
-        int[] arr = new int[]{1,45,67,21,12,3425,231,45,99,12,45,1,3251,564,23,1,4,12,67};
+        // int[] arr = new int[]{1,45,67,21,12,3425,231,45,99,12,45,1,3251,564,23,1,4,12,67};
+        int[] arr = new int[]{1,2,3,4,3,4,1,5,6,4,7,8,9};
         float[] arr1 = new float[]{(float)9.077,(float)4.207,(float)6.165};
         int len = arr.length;
         for(int i=0;i<len;i++)
